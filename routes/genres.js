@@ -1,33 +1,7 @@
 const express = require("express");
-const Joi = require("joi");
-const mongoose = require("mongoose");
 
+const { Genre, validate } = require('../models/genre');
 const router = express.Router();
-
-const genreSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    required: true,
-    minlength: 4,
-    maxlength: 20,
-    lowercase: true,
-    validate: {
-      validator: function (v) {
-        return new Promise(async (resolve, reject) => {
-          const genreInDB = await Genre.findOne({ type: v });
-
-          if (!genreInDB) {
-            resolve(v);
-          } else {
-            reject("Duplicate genre, it already exists in the database.");
-          }
-        });
-      },
-    },
-  },
-});
-
-const Genre = mongoose.model("Genre", genreSchema);
 
 // Get All Genres
 router.get("/", async (req, res) => {
@@ -55,7 +29,7 @@ router.get("/:id", async (req, res) => {
 
 // Creating a genre
 router.post("/", async (req, res) => {
-  const { error, value } = validateGenre(req.body);
+  const { error, value } = validate(req.body);
 
   if (error) {
     return res.send(error.details[0].message);
@@ -87,7 +61,7 @@ router.put("/:id", async (req, res) => {
       new: true,
     }
   );*/
-  const { error, value } = validateGenre(req.body);
+  const { error, value } = validate(req.body);
   
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -122,13 +96,5 @@ router.delete("/:id", async (req, res) => {
   }
   console.log(genre);
 });
-
-function validateGenre(genre) {
-  const schema = Joi.object({
-    type: Joi.string().min(3).max(20).required(),
-  });
-
-  return schema.validate(genre);
-}
 
 module.exports = router;
