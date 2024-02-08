@@ -41,7 +41,9 @@ router.post("/", async (req, res) => {
 
     res.status(201).send(genre);
   } catch (ex) {
-    res.status(400).send(ex.errors.type.reason);
+    if (ex.name === 'MongoServerError' && ex.code === 11000) {
+      res.status(400).send('Genre must be unique!');
+    }
   }
 });
 

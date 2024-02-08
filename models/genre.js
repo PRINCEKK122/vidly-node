@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Joi = require('joi');
+const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const genreSchema = new mongoose.Schema({
   type: {
@@ -8,19 +8,7 @@ const genreSchema = new mongoose.Schema({
     minlength: 4,
     maxlength: 20,
     lowercase: true,
-    validate: {
-      validator: function (v) {
-        return new Promise(async (resolve, reject) => {
-          const genreInDB = await Genre.findOne({ type: v });
-
-          if (!genreInDB) {
-            resolve(v);
-          } else {
-            reject("Duplicate genre, it already exists in the database.");
-          }
-        });
-      },
-    },
+    unique: true,
   },
 });
 

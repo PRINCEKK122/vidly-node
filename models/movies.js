@@ -15,12 +15,14 @@ exports.Movie = mongoose.model('Movie', mongoose.Schema({
   numberInStock: {
     type: Number,
     default: 0,
-    min: 0
+    min: 0,
+    max: 255
   },
   dailyRentalRate: {
     type: Number,
     default: 0,
-    min: 0.00
+    min: 0.00,
+    max: 255
   },
   genre: {
     type: genreSchema,
@@ -31,8 +33,9 @@ exports.Movie = mongoose.model('Movie', mongoose.Schema({
 exports.validateMovie = (movie) => {
   const schema = Joi.object({
     title: Joi.string().min(5).max(50).trim().required(),
-    numberInStock: Joi.number().positive().min(0),
-    dailyRentalRate: Joi.number().positive().precision(2)
+    genreId: Joi.string().required(),
+    numberInStock: Joi.number().positive().min(0).integer(),
+    dailyRentalRate: Joi.number().positive().precision(2).min(0.00)
   });
 
   return schema.validate(movie);
