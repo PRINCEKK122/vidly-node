@@ -41,21 +41,20 @@ router.post("/", async (req, res, next) => {
     dailyRentalRate,
     numberInStock,
   });
-
+  console.log(newMovie);
   try {
     const result = await newMovie.save();
     res.status(201).send(newMovie);
-    console.log(result);
+    console.log('Result', result);
   } catch (ex) {
     console.log(ex);
-    res.status(400).send("Bad Request, try again later!");
+    res.status(400).send(ex.message);
   }
 });
 
 router.put('/:id', async (req, res, next) => {
   const { error, value } = validateMovie(req.body);
 
-  console.log(error);
   if (error) return res.status(400).send(error.details[0].message);
 
   const movieId = req.params.id;

@@ -89,14 +89,14 @@ router.delete("/:id", async (req, res) => {
   /* const genre = await Genre.deleteOne({ _id: req.params.id }); */
 
   // Query First
-  const genre = await Genre.findByIdAndDelete(req.params.id);
+  let genre = await Genre.findById(req.params.id);
 
   if (genre) {
-    res.status(204).send(genre);
+    genre = await genre.deleteOne();
+    res.status(204).send();
   } else {
     res.status(404).send(`The genre with ID ${req.params.id} does not exists`);
   }
-  console.log(genre);
 });
 
 module.exports = router;
