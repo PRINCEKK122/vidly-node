@@ -28,7 +28,6 @@ module.exports.User = mongoose.model(
   })
 );
 
-module.exports.User = User;
 module.exports.validate = function (user) {
   const schema = Joi.object({
     name: Joi.string().required().min(5).max(55),
